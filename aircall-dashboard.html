@@ -188,7 +188,6 @@ function combinedTeamH(nm,co,pid,metrics){
   var showQs=metrics.indexOf("quotes_sent")>=0;
   var showQa=metrics.indexOf("quotes_accepted")>=0;
   var showRev=metrics.indexOf("revenue")>=0&&nm!=="Sales Support";
-  var showConv=nm!=="Sales Support";
   var rows=teamAgents.map(function(a){
     var c=callMap[a.n]||{total:0,inbound:0,outbound:0,over30:0,known:0,sumDur:0};
     var mt=0,qs=0,qa=0,rv=0;
@@ -210,7 +209,6 @@ function combinedTeamH(nm,co,pid,metrics){
   if(showQs)h+=smH('Q.Sent',totQs.toLocaleString(),'var(--purple)');
   if(showQa)h+=smH('Accepted',totQa.toLocaleString(),'var(--green)');
   if(showRev)h+=smH('Revenue',fEur(totRv),'var(--green)');
-  if(showConv){var convTot=totM>0?((totQa/totM)*100).toFixed(0):'—';h+=smH('Conv%',convTot+'%','var(--accent)')}
   h+='</div>';
   h+='<div class="tw"><div class="tsc"><table><thead><tr>';
   h+='<th style="text-align:left;padding-left:14px;min-width:155px">Agent</th>';
@@ -219,7 +217,6 @@ function combinedTeamH(nm,co,pid,metrics){
   if(showQs)h+='<th>Q.Sent</th>';
   if(showQa)h+='<th>Accepted</th>';
   if(showRev)h+='<th>Revenue</th>';
-  if(showConv)h+='<th>Conv%</th>';
   h+='</tr></thead><tbody>';
   rows.forEach(function(a,i){
     var bgRk=i<3?co+'22':'rgba(255,255,255,0.04)';
@@ -239,7 +236,6 @@ function combinedTeamH(nm,co,pid,metrics){
     if(showQs)h+='<td class="mono" style="color:var(--purple)">'+a.qsent+'</td>';
     if(showQa)h+='<td class="mono" style="color:var(--green);font-weight:600">'+a.qaccepted+'</td>';
     if(showRev)h+='<td class="mono" style="color:var(--green)">'+fEur(a.revenue)+'</td>';
-    if(showConv){var cv=a.meetings>0?((a.qaccepted/a.meetings)*100).toFixed(0)+'%':'—';h+='<td class="mono" style="color:var(--accent)">'+cv+'</td>';}
     h+='</tr>'
   });
   h+='</tbody></table></div></div></div>';
