@@ -1,0 +1,4 @@
+aircall_cache.json
+snowflake_cache.json
+__pycache__/
+*.pyc
