@@ -37,19 +37,27 @@ ROSTER = {
 
 
 def fetch_aircall_calls():
+    import time
     api_id    = os.environ['AIRCALL_API_ID']
     api_token = os.environ['AIRCALL_API_TOKEN']
     from_ts   = int(datetime(YEAR_START.year, YEAR_START.month, YEAR_START.day).timestamp())
     to_ts     = int(datetime.now().timestamp())
     calls, page = [], 1
     while True:
-        r = requests.get(
-            f'{AIRCALL_BASE}/calls',
-            auth=(api_id, api_token),
-            params={'from': from_ts, 'to': to_ts, 'page': page, 'per_page': 50},
-            timeout=30,
-        )
-        r.raise_for_status()
+        for attempt in range(5):
+            r = requests.get(
+                f'{AIRCALL_BASE}/calls',
+                auth=(api_id, api_token),
+                params={'from': from_ts, 'to': to_ts, 'page': page, 'per_page': 50},
+                timeout=30,
+            )
+            if r.status_code == 429:
+                wait = int(r.headers.get('Retry-After', 2 ** attempt))
+                print(f'  Rate limited, waiting {wait}s...')
+                time.sleep(wait)
+                continue
+            r.raise_for_status()
+            break
         data  = r.json()
         batch = data.get('calls', [])
         calls.extend(batch)
@@ -57,6 +65,7 @@ def fetch_aircall_calls():
         if not data.get('meta', {}).get('next_page_link'):
             break
         page += 1
+        time.sleep(0.5)
     return calls
 
 
