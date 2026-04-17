@@ -4,11 +4,13 @@ Refresh data.json from Aircall API + Snowflake.
 
 Required env vars:
   AIRCALL_API_ID, AIRCALL_API_TOKEN
-  SNOWFLAKE_ACCOUNT, SNOWFLAKE_USER, SNOWFLAKE_PASSWORD,
+  SNOWFLAKE_ACCOUNT, SNOWFLAKE_USER, SNOWFLAKE_PRIVATE_KEY,
   SNOWFLAKE_WAREHOUSE, SNOWFLAKE_DATABASE
 """
 import os, json, requests, snowflake.connector
 from datetime import datetime, date, timedelta, timezone
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.serialization import load_pem_private_key, Encoding, PrivateFormat, NoEncryption
 
 AIRCALL_BASE = 'https://api.aircall.io/v1'
 YEAR_START   = date(2026, 1, 1)
@@ -84,10 +86,13 @@ def process_aircall(calls):
 
 
 def query_snowflake():
+    pem = os.environ['SNOWFLAKE_PRIVATE_KEY'].encode()
+    p_key = load_pem_private_key(pem, password=None, backend=default_backend())
+    pkb = p_key.private_bytes(Encoding.DER, PrivateFormat.PKCS8, NoEncryption())
     conn = snowflake.connector.connect(
         account=os.environ['SNOWFLAKE_ACCOUNT'],
         user=os.environ['SNOWFLAKE_USER'],
-        password=os.environ['SNOWFLAKE_PASSWORD'],
+        private_key=pkb,
         warehouse=os.environ['SNOWFLAKE_WAREHOUSE'],
         database=os.environ['SNOWFLAKE_DATABASE'],
         schema='MARTS',

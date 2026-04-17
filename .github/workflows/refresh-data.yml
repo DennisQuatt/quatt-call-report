@@ -18,17 +18,17 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install requests snowflake-connector-python
+        run: pip install requests snowflake-connector-python cryptography
 
       - name: Refresh data.json
         env:
-          AIRCALL_API_ID:      ${{ secrets.AIRCALL_API_ID }}
-          AIRCALL_API_TOKEN:   ${{ secrets.AIRCALL_API_TOKEN }}
-          SNOWFLAKE_ACCOUNT:   ${{ secrets.SNOWFLAKE_ACCOUNT }}
-          SNOWFLAKE_USER:      ${{ secrets.SNOWFLAKE_USER }}
-          SNOWFLAKE_PASSWORD:  ${{ secrets.SNOWFLAKE_PASSWORD }}
-          SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
-          SNOWFLAKE_DATABASE:  ${{ secrets.SNOWFLAKE_DATABASE }}
+          AIRCALL_API_ID:         ${{ secrets.AIRCALL_API_ID }}
+          AIRCALL_API_TOKEN:      ${{ secrets.AIRCALL_API_TOKEN }}
+          SNOWFLAKE_ACCOUNT:      ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_USER:         ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_PRIVATE_KEY:  ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+          SNOWFLAKE_WAREHOUSE:    ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+          SNOWFLAKE_DATABASE:     ${{ secrets.SNOWFLAKE_DATABASE }}
         run: python scripts/refresh_data.py
 
       - name: Commit and push data.json
