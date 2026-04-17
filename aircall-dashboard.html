@@ -73,11 +73,7 @@ body.tv .sts{flex-wrap:nowrap}
 </head><body>
 <div class="hdr">
 <div style="display:flex;align-items:center"><div class="logo">Q</div><div><div style="font-size:17px;font-weight:700;color:var(--warm);letter-spacing:-0.3px">Quatt Team Report</div><div style="font-size:12px;color:var(--dim)">Aircall Performance Dashboard</div></div></div>
-<<<<<<< HEAD
-<div style="display:flex;align-items:center;gap:10px"><button id="tv-btn" class="tv-btn" onclick="toggleTV()">TV</button><span class="bdg" style="background:rgba(138,133,124,0.15);color:var(--warm2)">Last updated: 2026-04-16 14:42 · will automatically update every 10min.</span><span style="font-size:11px;color:var(--dim)">48 agents</span></div>
-=======
 <div style="display:flex;align-items:center;gap:10px"><button id="tv-btn" class="tv-btn" onclick="toggleTV()">TV</button><span id="upd-badge" class="bdg" style="background:rgba(138,133,124,0.15);color:var(--warm2)">Last updated: 2026-04-16 14:42 · will automatically update every 10min.</span><span style="font-size:11px;color:var(--dim)">48 agents</span></div>
->>>>>>> 13f133f10ee8a4d9da4ced59da3ea93be30acaa9
 </div>
 <div class="mn">
 <div class="ctr" id="dt-row" style="margin-bottom:8px"><div class="pls" id="dt"></div></div><div class="ctr" id="ctrl-row"><div class="pls" id="pp"></div><div class="pls" id="vp"></div></div>
@@ -85,11 +81,7 @@ body.tv .sts{flex-wrap:nowrap}
 <div class="sts" id="gs"></div>
 <div id="cc"></div>
 <div id="tm"></div>
-<<<<<<< HEAD
-<div class="ft"><span>48 agents across 3 teams &middot; Source: Aircall API · Updated: 2026-04-16 14:42 </span><span id="fl"></span></div>
-=======
 <div class="ft"><span id="upd-footer">48 agents across 3 teams &middot; Source: Aircall API · Updated: 2026-04-16 14:42 </span><span id="fl"></span></div>
->>>>>>> 13f133f10ee8a4d9da4ced59da3ea93be30acaa9
 </div>
 <script>
 function toggleTV(){
@@ -329,4 +321,9 @@ function render(){
 render();
 function fmtNow(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
 var _now=fmtNow();
-document.getElementById('upd-badge').textContent='Last updated: 2026-04-16 14:42 · will automatically update every 10min.</script></body></html>
+document.getElementById('upd-badge').textContent='Last updated: '+_now+' \u00b7 will automatically update every 10min.';
+document.getElementById('upd-footer').textContent='48 agents across 3 teams \u00b7 Source: Aircall API \u00b7 Updated: '+_now;
+var _loadTime=Date.now();
+setInterval(function(){location.reload();},600000);
+document.addEventListener('visibilitychange',function(){if(!document.hidden&&Date.now()-_loadTime>=600000){location.reload();}});
+</script></body></html>
