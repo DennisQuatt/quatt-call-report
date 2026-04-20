@@ -96,6 +96,12 @@ var SF_QUOTES_SENT={};
 var SF_QUOTES_ACCEPTED={};
 var SF_REVENUE={};
 var PERIODS=[];
+var TN={"C":"Call Team","S":"Sales Support","H":"HV Team"};
+var TC={"Call Team":"#6eb5f5","Sales Support":"#b89cf5","HV Team":"#f5a623"};
+var ROSTER={"C":[],"S":[],"H":[]};
+var tab='calls',per='today',sBy='total',sDir='desc',vw='all';
+var selectedTeams=[],selectedMetrics=['calls'];
+var medal=['#f5a623','#c4bfb4','#b89cf5'];
 
 function getPeriod(id){for(var i=0;i<PERIODS.length;i++){if(PERIODS[i].id===id)return PERIODS[i]}return PERIODS[6]}
 
@@ -150,7 +156,7 @@ function sfShift(d){return d}
 function sfCalc(pid,sfData){var pr=getPeriod(pid);var dates=pr.dates.map(sfShift);return D.map(function(a){var ad=sfData[a.n]||{};var tot=0;dates.forEach(function(d){tot+=ad[d]||0});return{name:a.n,team:TN[a.t],total:tot}})}
 function sfTblH(ag,co,label){var so=ag.slice().sort(function(a,b){return b.total-a.total});var h='<div class="tw"><div class="tsc"><table><thead><tr><th style="text-align:left;padding-left:14px;min-width:200px">Agent</th><th>'+label+'</th></tr></thead><tbody>';so.forEach(function(a,i){var bg=i<3?co+'22':'rgba(255,255,255,0.04)';var fc=i<3?co:'var(--dim)';var vc=a.total===0?'var(--red)':co;h+='<tr><td><span class="rk" style="background:'+bg+';color:'+fc+'">'+(i+1)+'</span><span style="color:var(--warm);font-weight:500">'+a.name+'</span></td><td class="mono" style="color:'+vc+';font-weight:700;font-size:15px">'+a.total+'</td></tr>';});return h+'</tbody></table></div></div>'}
 
-function sfTeamH(nm,ag,co,label){var tot=0;ag.forEach(function(a){tot+=a.total});return'<div style="margin-bottom:28px"><div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><div style="width:4px;height:26px;border-radius:2px;background:'+co+'"></div><h3 style="font-size:17px;font-weight:700;color:var(--warm);letter-spacing:-0.3px">'+nm+'</h3><span class="bdg" style="background:'+co+'18;color:'+co+'">'+ag.length+' agents</span></div><div class="sts" style="gap:8px">'+smH('Total '+label,tot.toLocaleString(),co)+'</div>'+sfTblH(fAg,co,label)+'</div>'}
+function sfTeamH(nm,ag,co,label){var tot=0;ag.forEach(function(a){tot+=a.total});return'<div style="margin-bottom:28px"><div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><div style="width:4px;height:26px;border-radius:2px;background:'+co+'"></div><h3 style="font-size:17px;font-weight:700;color:var(--warm);letter-spacing:-0.3px">'+nm+'</h3><span class="bdg" style="background:'+co+'18;color:'+co+'">'+ag.length+' agents</span></div><div class="sts" style="gap:8px">'+smH('Total '+label,tot.toLocaleString(),co)+'</div>'+sfTblH(ag,co,label)+'</div>'}
 function renderSF(sfData,label,pr){var ag=sfCalc(per,sfData);var teams={};["Call Team","Sales Support","HV Team"].forEach(function(t){teams[t]=ag.filter(function(a){return a.team===t})});var tot=0;ag.forEach(function(a){tot+=a.total});document.getElementById("sub").innerHTML=pr.desc+' · '+pr.dates.length+' day'+(pr.dates.length!==1?'s':'')+' · '+ag.length+' agents';document.getElementById("gs").innerHTML=sH("Total "+label,tot.toLocaleString(),"var(--warm)");document.getElementById("cc").innerHTML="";var out="";if(vw==="all"||vw==="Call Team"){var ct=teams["Call Team"]||[];if(ct.length)out+=sfTeamH("Call Team",ct,"#6eb5f5",label)}if(vw==="all"||vw==="Sales Support"){var ss=teams["Sales Support"]||[];if(ss.length)out+=sfTeamH("Sales Support",ss,"#b89cf5",label)}if(vw==="all"||vw==="HV Team"){var hv=teams["HV Team"]||[];if(hv.length)out+=sfTeamH("HV Team",hv,"#f5a623",label)}document.getElementById("tm").innerHTML=out}
 
 function fEur(v){return '€'+Math.round(v).toLocaleString('nl-NL')}
