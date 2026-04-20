@@ -183,7 +183,7 @@ function combinedTeamH(nm,co,pid,metrics){
   var showQs=metrics.indexOf("quotes_sent")>=0;
   var showQa=metrics.indexOf("quotes_accepted")>=0;
   var showRev=metrics.indexOf("revenue")>=0&&nm!=="Sales Support";
-  var showConv=nm!=="Sales Support";
+  var showConv=false;
   var rows=teamAgents.map(function(a){
     var c=callMap[a.n]||{total:0,inbound:0,outbound:0,over30:0,known:0,sumDur:0};
     var mt=0,qs=0,qa=0,rv=0;
